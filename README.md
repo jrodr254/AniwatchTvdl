@@ -108,23 +108,58 @@ Configure the bot by setting the following environment variables (or updating `c
 
 <hr>
 
-## ✧ 𝘿𝙚𝙥𝙡𝙤𝙮𝙢𝙚𝙣𝙩
+## ✧ 𝘿𝙚𝙥𝙡𝙤𝙮𝙢𝙚𝙣𝙩 𝙤𝙣 𝘼𝙒𝙎 𝙀𝘾2 (𝘿𝙤𝙘𝙠𝙚𝙧)
 
-### Local / Windows Environment
+### Requirements
+- AWS EC2 instance (Ubuntu) with at least **2GB RAM** and **8GB storage**
+- SSH access to the instance
+
+### Step 1: Add Swap Space (Recommended)
+
+This prevents upload failures due to low memory:
+
 ```bash
-# Clone and install requirements
-pip install -r requirements.txt
+sudo fallocate -l 2G /swapfile && sudo chmod 600 /swapfile && sudo mkswap /swapfile && sudo swapon /swapfile && echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
+```
 
-# Execute the bot
+### Step 2: Clone and Run Setup
+
+```bash
+cd ~ && git clone https://github.com/jrodr254/AniwatchTvdl.git && cd AniwatchTvdl && chmod +x ec2-docker-setup.sh && ./ec2-docker-setup.sh
+```
+
+The script will:
+- Install Docker and Docker Compose
+- Ask for your environment variables (API_ID, API_HASH, BOT_TOKEN, MONGO_URL, OWNER_ID, MAIN_CHANNEL, LOG_CHANNEL)
+- Build the Docker image and start the bot in the background
+
+### After Setup
+
+The bot runs in the background. You can safely close SSH — the bot stays running.
+
+| Action | Command |
+| :--- | :--- |
+| Check status | `sudo docker compose ps` |
+| View logs | `sudo docker compose logs -f` |
+| Restart bot | `sudo docker compose restart` |
+| Stop bot | `sudo docker compose down` |
+| Start bot | `sudo docker compose up -d` |
+
+The bot will **auto-restart** on crash and **start automatically** on server reboot.
+
+<hr>
+
+## ✧ 𝙇𝙤𝙘𝙖𝙡 𝘿𝙚𝙥𝙡𝙤𝙮𝙢𝙚𝙣𝙩
+
+### Windows
+```bash
+pip install -r requirements.txt
 py -m cantarella
 ```
 
-### Linux / VPS / Heroku Environment
+### Linux / VPS / Heroku
 ```bash
-# Clone and install requirements
 pip install -r requirements.txt
-
-# Execute the bot using the shell script
 sh run.sh
 ```
 
@@ -141,44 +176,7 @@ We extend our gratitude to the amazing developers behind **Cantarella**:
 <p align="center">
   <i>Developed with ❤️ for the Anime Community</i>
 </p>
+
 <p align="center">
   <img src="https://user-images.githubusercontent.com/74038190/225813708-98b745f2-7d22-48cf-9150-083f1b00d6c9.gif" width="100%">
 </p>
-
-## ✧ Docker Deployment on EC2
-
-To deploy the AniwatchTvdl bot using Docker on an AWS EC2 instance, follow these steps:
-
-1.  **Prepare your EC2 instance:**
-    *   Launch an EC2 instance (e.g., Ubuntu Server) with at least 2GB RAM and 8GB storage.
-    *   Ensure you have SSH access to the instance.
-
-2.  **Run the one-command setup script:**
-    *   SSH into your EC2 instance.
-    *   Download the `ec2-docker-setup.sh` script:
-        ```bash
-        wget https://raw.githubusercontent.com/jrodr254/AniwatchTvdl/main/ec2-docker-setup.sh
-        chmod +x ec2-docker-setup.sh
-        ```
-    *   Execute the script. It will prompt you for necessary environment variables:
-        ```bash
-        ./ec2-docker-setup.sh
-        ```
-
-    The script will perform the following actions:
-    *   Install Docker and Docker Compose if they are not already present.
-    *   Clone the AniwatchTvdl repository (if not already cloned).
-    *   Prompt you to enter your bot's environment variables (API_ID, API_HASH, BOT_TOKEN, MONGO_URL, OWNER_ID, MAIN_CHANNEL, LOG_CHANNEL) and save them to a `.env` file.
-    *   Build the Docker image and start the bot using `docker-compose` in detached mode.
-
-3.  **Verify the bot status:**
-    *   You can check the status of the running Docker container using:
-        ```bash
-        docker ps
-        ```
-    *   To view the bot's logs:
-        ```bash
-        docker logs aniwatchtvdl_aniwatchtvdl_1 -f
-        ```
-
-This Docker-based setup ensures your AniwatchTvdl bot runs reliably and persistently on your EC2 instance with easier management and portability.
