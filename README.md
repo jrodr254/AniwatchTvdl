@@ -145,43 +145,40 @@ We extend our gratitude to the amazing developers behind **Cantarella**:
   <img src="https://user-images.githubusercontent.com/74038190/225813708-98b745f2-7d22-48cf-9150-083f1b00d6c9.gif" width="100%">
 </p>
 
-## ✧ EC2 Background Setup
+## ✧ Docker Deployment on EC2
 
-To set up the AniwatchTvdl bot on an AWS EC2 instance to run in the background using `systemd`, follow these steps:
+To deploy the AniwatchTvdl bot using Docker on an AWS EC2 instance, follow these steps:
 
 1.  **Prepare your EC2 instance:**
-    *   Launch an EC2 instance (e.g., Ubuntu Server).
+    *   Launch an EC2 instance (e.g., Ubuntu Server) with at least 2GB RAM and 8GB storage.
     *   Ensure you have SSH access to the instance.
 
-2.  **Run the setup script:**
+2.  **Run the one-command setup script:**
     *   SSH into your EC2 instance.
-    *   Download the `ec2-setup.sh` script:
+    *   Download the `ec2-docker-setup.sh` script:
         ```bash
-        wget https://raw.githubusercontent.com/jrodr254/AniwatchTvdl/main/ec2-setup.sh
-        chmod +x ec2-setup.sh
+        wget https://raw.githubusercontent.com/jrodr254/AniwatchTvdl/main/ec2-docker-setup.sh
+        chmod +x ec2-docker-setup.sh
         ```
     *   Execute the script. It will prompt you for necessary environment variables:
         ```bash
-        ./ec2-setup.sh
+        ./ec2-docker-setup.sh
         ```
 
     The script will perform the following actions:
-    *   Install required dependencies (python3, pip, git, wget, ffmpeg, libicu-dev).
-    *   Clone the AniwatchTvdl repository to `/opt/AniwatchTvdl`.
-    *   Install Python requirements from `requirements.txt`.
-    *   Download the `N_m3u8DL-RE` binary for video downloading.
-    *   Prompt you to enter your bot's environment variables (API_ID, API_HASH, BOT_TOKEN, MONGO_URL, OWNER_ID, MAIN_CHANNEL, LOG_CHANNEL) and save them securely to `/etc/aniwatchtvdl.env`.
-    *   Create a `systemd` service named `aniwatchtvdl.service` to run the bot in the background.
-    *   Enable and start the `aniwatchtvdl` service, ensuring the bot starts automatically on reboot and restarts if it crashes.
+    *   Install Docker and Docker Compose if they are not already present.
+    *   Clone the AniwatchTvdl repository (if not already cloned).
+    *   Prompt you to enter your bot's environment variables (API_ID, API_HASH, BOT_TOKEN, MONGO_URL, OWNER_ID, MAIN_CHANNEL, LOG_CHANNEL) and save them to a `.env` file.
+    *   Build the Docker image and start the bot using `docker-compose` in detached mode.
 
 3.  **Verify the bot status:**
-    *   You can check the status of the bot service using:
+    *   You can check the status of the running Docker container using:
         ```bash
-        sudo systemctl status aniwatchtvdl
+        docker ps
         ```
     *   To view the bot's logs:
         ```bash
-        sudo journalctl -u aniwatchtvdl -f
+        docker logs aniwatchtvdl_aniwatchtvdl_1 -f
         ```
 
-This setup ensures your AniwatchTvdl bot runs reliably and persistently on your EC2 instance.
+This Docker-based setup ensures your AniwatchTvdl bot runs reliably and persistently on your EC2 instance with easier management and portability.

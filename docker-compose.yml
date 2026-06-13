@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  aniwatchtvdl:
+    build: .
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - ./data:/app/data # Optional: for persistent data if needed
+    # resource limits for 2GB RAM EC2 instance
+    deploy:
+      resources:
+        limits:
+          memory: 1.5G
+        reservations:
+          memory: 1G
