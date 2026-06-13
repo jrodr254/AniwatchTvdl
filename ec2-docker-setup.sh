@@ -5,6 +5,7 @@ install_docker() {
     if ! command -v docker &> /dev/null
     then
         echo "Docker not found. Installing Docker..."
+        sudo rm -f /etc/apt/sources.list.d/docker.list
         sudo apt-get update
         sudo apt-get install -y ca-certificates curl gnupg
         sudo install -m 0755 -d /etc/apt/keyrings
@@ -15,10 +16,16 @@ install_docker() {
           "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | \
           sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
         sudo apt-get update
-        sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+        sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
         sudo usermod -aG docker $USER
-        echo "Docker installed successfully. Please log out and log back in for group changes to take effect, then re-run this script."
-        exit 0
+        newgrp docker
+        # Verify docker command is available after newgrp
+        if ! command -v docker &> /dev/null; then
+            echo "Error: Docker command not found after newgrp. Please log out and log back in manually."
+            exit 1
+        fi
+        echo "Docker installed successfully."
+
     else
         echo "Docker is already installed."
     fi
