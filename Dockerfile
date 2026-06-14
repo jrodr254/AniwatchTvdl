@@ -6,8 +6,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     wget \
     tar \
     gcc \
-    python3-dev \
-    build-essential \
+    libc6-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Detect architecture and download correct N_m3u8DL-RE binary
