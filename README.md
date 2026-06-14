@@ -147,6 +147,24 @@ The bot runs in the background. You can safely close SSH — the bot stays runni
 
 The bot will **auto-restart** on crash and **start automatically** on server reboot.
 
+### For Amazon Linux EC2 (Cheaper)
+
+Amazon Linux costs ~20% less than Ubuntu for the same specs. Use this instead:
+
+#### Step 1: Add Swap Space
+
+```bash
+sudo fallocate -l 2G /swapfile && sudo chmod 600 /swapfile && sudo mkswap /swapfile && sudo swapon /swapfile && echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
+```
+
+#### Step 2: Clone and Run Setup
+
+```bash
+cd ~ && git clone https://github.com/jrodr254/AniwatchTvdl.git && cd AniwatchTvdl && chmod +x ec2-amazon-linux-setup.sh && ./ec2-amazon-linux-setup.sh
+```
+
+Same management commands apply after setup.
+
 <hr>
 
 ## ✧ 𝙇𝙤𝙘𝙖𝙡 𝘿𝙚𝙥𝙡𝙤𝙮𝙢𝙚𝙣𝙩
